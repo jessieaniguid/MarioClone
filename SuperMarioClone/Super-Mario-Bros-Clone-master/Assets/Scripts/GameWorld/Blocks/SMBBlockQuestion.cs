@@ -8,6 +8,8 @@ public class SMBBlockQuestion : SMBBlock {
 
 	void Start() {
 
+        beliefArray = new string[4];
+
 		_prizeObject = SMBGameWorld.Instance.InstantiateTile (transform.position, prize);
 
 		if (_prizeObject != null) {

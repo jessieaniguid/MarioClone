@@ -1,24 +1,51 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+
+
 public class SMBEnemy : SMBCharacter {
 
-	private SMBConstants.EnemyState _state;
+    //Rigidbody
     public Rigidbody2D rb;
-    public bool detected = false;
+
+    //detection variable
+    public bool isDetected = false;
+
+    //belief stack variables
+    public string Agent;
+    public string Action;
+    public string Interaction;
+    public string Result;
+
+    //tuple
+    public string[] beliefArray;
+
+    //state variables
     public bool isDead = false;
+
+
+    private SMBConstants.EnemyState _state;
+
 
 
 	void Start() {
         rb = gameObject.AddComponent<Rigidbody2D>();
         rb.isKinematic = true;
 		_state = SMBConstants.EnemyState.Move;
+
+        //setting up array
+        beliefArray = new string[4];
 	}
 
 	// Update is called once per frame
 	override protected void Update () {
 
-		if (_state == SMBConstants.EnemyState.Dead)
+        beliefArray[0] = Agent;
+        beliefArray[1] = Action;
+        beliefArray[2] = Interaction;
+        beliefArray[3] = Result;
+
+        if (_state == SMBConstants.EnemyState.Dead)
 			return;
 
 		SMBConstants.MoveDirection side = SMBConstants.MoveDirection.Forward;

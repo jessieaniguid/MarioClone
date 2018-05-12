@@ -5,6 +5,25 @@ using System.Collections;
 [RequireComponent(typeof(BoxCollider2D))]
 public class SMBBlock : MonoBehaviour {
 
+    //attaching rigidbodies
+    public Rigidbody2D rb;
+
+    //detection variables
+    public bool isDetected;
+
+    //belief stack variables
+    public string Agent;
+    public string Action;
+    public string Interaction;
+    public string Result;
+
+    //belief array
+    public string[] beliefArray;
+
+    //state
+    public bool isAlive;
+    public bool isDead;
+
 	enum BounceState {
 		None,
 		Up,
@@ -28,11 +47,30 @@ public class SMBBlock : MonoBehaviour {
 		_collider = GetComponent<BoxCollider2D> ();
 	}
 
-	void Update() {
+    private void Start()
+    {
+        rb = gameObject.AddComponent<Rigidbody2D>();
+        rb.isKinematic = true;
+        isDetected = false;
+
+        //setting up array
+        beliefArray = new string[4];
+        beliefArray[0] = Agent;
+        beliefArray[1] = Action;
+        beliefArray[2] = Interaction;
+        beliefArray[3] = Result;
+    }
+
+    void Update() {
 
 		if (_bounceState != BounceState.None)
 			Bounce ();
-	}
+
+        beliefArray[0] = Agent;
+        beliefArray[1] = Action;
+        beliefArray[2] = Interaction;
+        beliefArray[3] = Result;
+    }
 
 	void OnInteraction(SMBPlayer player) {
 
