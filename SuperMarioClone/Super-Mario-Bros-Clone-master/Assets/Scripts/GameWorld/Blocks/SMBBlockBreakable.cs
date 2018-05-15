@@ -10,6 +10,9 @@ public class SMBBlockBreakable : SMBBlock {
 			SMBGameWorld.Instance.PlayParticle (transform.position, "SMBBlockParticleSystem");
 			SMBGameWorld.Instance.PlaySoundEffect ((int)SMBConstants.GameWorldSoundEffects.BreakBlock);
 
+            //for Mario's OnTriggerStay
+            isDead = true;
+
 			Destroy (gameObject);
 		}
 	}

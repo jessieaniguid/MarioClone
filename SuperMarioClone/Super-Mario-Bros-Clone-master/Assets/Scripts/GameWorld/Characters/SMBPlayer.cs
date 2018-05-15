@@ -204,12 +204,20 @@ public class SMBPlayer : SMBCharacter {
             }
         }else if(discoveredObject.name == "e")
         {
-            //if(discoveredObject.GetComponent<SMBBlockBreakable>().isDetected == false)
-            //{
-            //    //Debug.Log("Agent: Breakable Block");
-            //    discoveredObject.GetComponent<SMBBlockBreakable>().Agent = "BreakableBlock";
-            //    discoveredObject.GetComponent<SMBBlockBreakable>().isDetected = true;
-            //}
+            if (discoveredObject.GetComponent<SMBBlockBreakable>().isDetected == false)
+            {
+                discoveredObject.GetComponent<SMBBlockBreakable>().Agent = "BreakableBlock";
+                discoveredObject.GetComponent<SMBBlockBreakable>().isDetected = true;
+                discoveredObject.GetComponent<SMBBlockBreakable>().initialX = discoveredObject.transform.position.x;
+                if (discoveredObject.GetComponent<SMBBlockBreakable>().initialX > transform.position.x)
+                {
+                    discoveredObject.GetComponent<SMBBlockBreakable>().enteredFromRight = true;
+                }
+                else if (discoveredObject.GetComponent<SMBBlockBreakable>().initialX < transform.position.x)
+                {
+                    discoveredObject.GetComponent<SMBBlockBreakable>().enteredFromRight = false;
+                }
+            }
         }
     }
 
@@ -233,8 +241,7 @@ public class SMBPlayer : SMBCharacter {
         {
             //These are so that once an array has already been printed
             //it won't be printed again
-            //**Add in the exit function one that resets the states
-            //**of the enemy
+
             if (discoveredObject.gameObject.GetComponent<SMBEnemy>().printed == true) return;
 
             if (discoveredObject.GetComponent<SMBEnemy>().isDetected == true 
@@ -247,6 +254,21 @@ public class SMBPlayer : SMBCharacter {
                 discoveredObject.GetComponent<SMBEnemy>().updateBeliefArray();
                 printArray(discoveredObject.GetComponent<SMBEnemy>().beliefArray);
                 discoveredObject.gameObject.GetComponent<SMBEnemy>().printed = true;
+            }
+        }else if(discoveredObject.name == "e")
+        {
+            if (discoveredObject.gameObject.GetComponent<SMBBlockBreakable>().printed == true) return;
+
+            if (discoveredObject.GetComponent<SMBBlockBreakable>().isDetected == true
+                && transform.position.y > 0 && discoveredObject.GetComponent<SMBEnemy>().isDead == true)
+            {
+                discoveredObject.GetComponent<SMBBlockBreakable>().Agent = "Brick";
+                discoveredObject.GetComponent<SMBBlockBreakable>().Action = "Jump";
+                discoveredObject.GetComponent<SMBBlockBreakable>().Interaction = "Break";
+                beliefStack.Push(discoveredObject.GetComponent<SMBBlockBreakable>().beliefArray);
+                discoveredObject.GetComponent<SMBBlockBreakable>().updateBeliefArray();
+                printArray(discoveredObject.GetComponent<SMBBlockBreakable>().beliefArray);
+                discoveredObject.gameObject.GetComponent<SMBBlockBreakable>().printed = true;
             }
         }
 
@@ -263,15 +285,15 @@ public class SMBPlayer : SMBCharacter {
         if (isAlive == false) return;
 
         GameObject discoveredObject = collision.gameObject;
-        
+
         //This if else is for when Mario ignores things
         if (discoveredObject.transform.position.x < transform.position.x)
         {
-            if(discoveredObject.name == "g")
+            if (discoveredObject.name == "g")
             {
                 if (discoveredObject.gameObject.GetComponent<SMBEnemy>().isDead == false)
                 {
-                    if(discoveredObject.gameObject.GetComponent<SMBEnemy>().enteredFromRight == true)
+                    if (discoveredObject.gameObject.GetComponent<SMBEnemy>().enteredFromRight == true)
                     {
                         discoveredObject.GetComponent<SMBEnemy>().Interaction = "No Effect";
                         discoveredObject.GetComponent<SMBEnemy>().Action = "Walk Right";
@@ -284,24 +306,34 @@ public class SMBPlayer : SMBCharacter {
 
                     }
                 }
+            } else if (discoveredObject.name == "e")
+            {
+                if (discoveredObject.gameObject.GetComponent<SMBBlockBreakable>().isDead == false)
+                {
+                    if (discoveredObject.gameObject.GetComponent<SMBBlockBreakable>().enteredFromRight == true)
+                    {
+                        discoveredObject.GetComponent<SMBBlockBreakable>().Interaction = "No Effect";
+                        discoveredObject.GetComponent<SMBBlockBreakable>().Action = "Walk Right";
+                        discoveredObject.GetComponent<SMBBlockBreakable>().isDetected = false;
+                        beliefStack.Push(discoveredObject.GetComponent<SMBBlockBreakable>().beliefArray);
+                        Debug.Log("walk right function");
+                        discoveredObject.GetComponent<SMBBlockBreakable>().updateBeliefArray();
+                        printArray(discoveredObject.GetComponent<SMBBlockBreakable>().beliefArray);
+                        discoveredObject.GetComponent<SMBBlockBreakable>().Reset();
+
+                    }
+                }
             }
-            //else if(discoveredObject.name == "e")
-            //{
-            //    discoveredObject.GetComponent<SMBBlock>().Interaction = "No Effect";
-            //    discoveredObject.GetComponent<SMBBlock>().Action = "Walk Right";
-            //    discoveredObject.GetComponent<SMBBlock>().isDetected = false;
-            //    beliefStack.Push(discoveredObject.GetComponent<SMBBlock>().beliefArray);
-            //    printArray(discoveredObject.GetComponent<SMBBlock>().beliefArray);
-            //}
+
         }
-        else if(discoveredObject.transform.position.x > transform.position.x)
+        else if (discoveredObject.transform.position.x > transform.position.x)
         {
-            if(discoveredObject.name == "g")
+            if (discoveredObject.name == "g")
             {
                 if (discoveredObject.gameObject.GetComponent<SMBEnemy>().isDead == false)
                 {
                     if (discoveredObject.gameObject.GetComponent<SMBEnemy>().enteredFromRight == false)
-                    { 
+                    {
                         discoveredObject.GetComponent<SMBEnemy>().Interaction = "No Effect";
                         discoveredObject.GetComponent<SMBEnemy>().Action = "Walk Left";
                         discoveredObject.GetComponent<SMBEnemy>().isDetected = false;
@@ -312,18 +344,21 @@ public class SMBPlayer : SMBCharacter {
                         discoveredObject.GetComponent<SMBEnemy>().Reset();
                     }
                 }
+            } else if (discoveredObject.name == "e")
+            {
+                if (discoveredObject.gameObject.GetComponent<SMBEnemy>().enteredFromRight == false)
+                {
+                    discoveredObject.GetComponent<SMBEnemy>().Interaction = "No Effect";
+                    discoveredObject.GetComponent<SMBEnemy>().Action = "Walk Left";
+                    discoveredObject.GetComponent<SMBEnemy>().isDetected = false;
+                    beliefStack.Push(discoveredObject.GetComponent<SMBEnemy>().beliefArray);
+                    Debug.Log("walk left function");
+                    discoveredObject.GetComponent<SMBEnemy>().updateBeliefArray();
+                    printArray(discoveredObject.GetComponent<SMBEnemy>().beliefArray);
+                    discoveredObject.GetComponent<SMBEnemy>().Reset();
+                }
             }
-            //else if(discoveredObject.name == "e"){
-            //    discoveredObject.GetComponent<SMBBlock>().Interaction = "No Effect";
-            //    discoveredObject.GetComponent<SMBBlock>().Action = "Walk Left";
-            //    discoveredObject.GetComponent<SMBBlock>().isDetected = false;
-            //    beliefStack.Push(discoveredObject.GetComponent<SMBBlock>().beliefArray);
-            //    printArray(discoveredObject.GetComponent<SMBBlock>().beliefArray);
-            //}
-            //interaction = "No Effect";
-            //action = "Walk_Left";
-            //Debug.Log("action is: " + action + " interaction is: " + interaction);
-        }
+        }   
     }
 
 
@@ -342,7 +377,7 @@ public class SMBPlayer : SMBCharacter {
         stream.WriteLine("Agent: " + beliefArray[0] + " Action: " + beliefArray[1] + " Interaction: " + beliefArray[2]
             + " Result: " + beliefArray[3]);
 
-       // stream.Close();
+       stream.Close();
 
         AssetDatabase.ImportAsset(path);
 
@@ -499,7 +534,6 @@ public class SMBPlayer : SMBCharacter {
 	void Die(float timeToDie, bool animate = true) {
         isAlive = false;
 
-        
 
         Interaction = "Take Damage";
         beliefStack.Push(marioBeliefArray);

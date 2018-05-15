@@ -9,22 +9,28 @@ public class SMBBlock : MonoBehaviour {
     public Rigidbody2D rb;
 
     //detection variables
-    public bool isDetected;
+    public bool isDetected = false;
 
     //belief stack variables
-    public string Agent;
-    public string Action;
-    public string Interaction;
-    public string Result;
+    public bool printed;
+    public bool beliefArrayComplete;
+    public string Agent = "empty";
+    public string Action = "empty";
+    public string Interaction = "empty";
+    public string Result = "empty";
 
     //belief array
     public string[] beliefArray;
 
     //state
-    public bool isAlive;
-    public bool isDead;
+    public bool isDead = false;
 
-	enum BounceState {
+    public bool enteredFromRight;
+    public float initialX, finalX;
+
+
+
+    enum BounceState {
 		None,
 		Up,
 		Down
@@ -47,6 +53,14 @@ public class SMBBlock : MonoBehaviour {
 		_collider = GetComponent<BoxCollider2D> ();
 	}
 
+    public void updateBeliefArray()
+    {
+        beliefArray[0] = Agent;
+        beliefArray[1] = Action;
+        beliefArray[2] = Interaction;
+        beliefArray[3] = Result;
+    }
+
     private void Start()
     {
         rb = gameObject.AddComponent<Rigidbody2D>();
@@ -66,10 +80,7 @@ public class SMBBlock : MonoBehaviour {
 		if (_bounceState != BounceState.None)
 			Bounce ();
 
-        beliefArray[0] = Agent;
-        beliefArray[1] = Action;
-        beliefArray[2] = Interaction;
-        beliefArray[3] = Result;
+        updateBeliefArray();
     }
 
 	void OnInteraction(SMBPlayer player) {
@@ -113,8 +124,18 @@ public class SMBBlock : MonoBehaviour {
 			}
 		}
 	}
-		
-	protected virtual void DestroyBlock (SMBPlayer player) {
+
+    public void Reset()
+    {
+        for (int i = 0; i < beliefArray.Length; i++)
+        {
+            beliefArray[i] = "empty";
+        }
+
+        beliefArrayComplete = false;
+    }
+
+    protected virtual void DestroyBlock (SMBPlayer player) {
 		
 	}
 
