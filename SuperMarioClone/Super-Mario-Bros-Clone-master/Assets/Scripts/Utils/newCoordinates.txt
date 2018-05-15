@@ -7,3 +7,15 @@ Agent: Goomba Action: Jump Interaction: Kill Result: empty
 Agent: Goomba Action: Jump Interaction: Kill Result: empty
 Agent: Goomba Action: Jump Interaction: Kill Result: empty
 Agent: Goomba Action: Walk Right Interaction: No Effect Result: empty
+Agent: Goomba Action: Jump Interaction: Kill Result: empty
+Agent: Goomba Action: Jump Interaction: Kill Result: empty
+Agent: BreakableBlock Action: Walk Right Interaction: No Effect Result: empty
+Agent: BreakableBlock Action: Walk Right Interaction: No Effect Result: empty
+Agent: BreakableBlock Action: Walk Right Interaction: No Effect Result: empty
+Agent: Goomba Action: Jump Interaction: Kill Result: empty
+Agent: Goomba Action: Jump Interaction: Kill Result: empty
+Agent: Goomba Action: Jump Interaction: Kill Result: empty
+Agent: Mario Action:  Interaction: Take Damage Result: 
+Agent: Mario Action:  Interaction: Take Damage Result: 
+Agent: Mario Action:  Interaction: Take Damage Result: 
+Agent: Mario Action:  Interaction: Take Damage Result: 

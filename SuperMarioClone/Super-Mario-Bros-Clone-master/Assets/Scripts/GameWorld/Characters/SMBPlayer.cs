@@ -260,7 +260,7 @@ public class SMBPlayer : SMBCharacter {
             if (discoveredObject.gameObject.GetComponent<SMBBlockBreakable>().printed == true) return;
 
             if (discoveredObject.GetComponent<SMBBlockBreakable>().isDetected == true
-                && transform.position.y > 0 && discoveredObject.GetComponent<SMBEnemy>().isDead == true)
+                && transform.position.y > 0 && discoveredObject.GetComponent<SMBBlockBreakable>().isDead == true)
             {
                 discoveredObject.GetComponent<SMBBlockBreakable>().Agent = "Brick";
                 discoveredObject.GetComponent<SMBBlockBreakable>().Action = "Jump";
