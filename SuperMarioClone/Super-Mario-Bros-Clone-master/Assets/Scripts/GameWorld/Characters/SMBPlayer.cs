@@ -1,7 +1,7 @@
-﻿using UnityEngine;
-using System.Collections;
+﻿using System.Collections.Generic;
 using System.IO;
-using System.Collections.Generic;
+using UnityEditor;
+using UnityEngine;
 
 
 [RequireComponent (typeof (SMBParticleSystem))]
@@ -16,7 +16,7 @@ public class SMBPlayer : SMBCharacter {
     //Text reading
     //got help from:
     //https://support.unity3d.com/hc/en-us/articles/115000341143-How-do-I-read-and-write-data-from-a-text-file-
-    private StreamWriter writer;
+    private StreamWriter stream;
     private float positionInterval;
 
     //adding circle collider
@@ -87,10 +87,10 @@ public class SMBPlayer : SMBCharacter {
         circleCollider.radius = circleRadius;
         circleCollider.isTrigger = true;
 
-        string path = "Assets/Scripts/Utils/newCoordinates.txt";
+        //string path = "Assets/Scripts/Utils/newCoordinates.txt";
 
         //text editing
-        writer = new StreamWriter(path, false);
+        //writer = new StreamWriter(path, false);
 
         //makes it so the player starts out as the tiny mario
         _state = SMBConstants.PlayerState.Short;
@@ -115,6 +115,7 @@ public class SMBPlayer : SMBCharacter {
         if (_lockController)
 			return;
 
+        //Map Mario's position every .5 seconds
         positionInterval += Time.fixedDeltaTime;
 
         if(positionInterval > 0.5f)
@@ -188,18 +189,27 @@ public class SMBPlayer : SMBCharacter {
         {
             if (discoveredObject.GetComponent<SMBEnemy>().isDetected == false)
             {
-                //Debug.Log("Agent: Goomba");
                 discoveredObject.GetComponent<SMBEnemy>().Agent = "Goomba";
-                collision.gameObject.GetComponent<SMBEnemy>().isDetected = true;
+                discoveredObject.GetComponent<SMBEnemy>().isDetected = true;
+                discoveredObject.GetComponent<SMBEnemy>().initialX = discoveredObject.transform.position.x;
+                if(discoveredObject.GetComponent<SMBEnemy>().initialX > transform.position.x)
+                {
+                    discoveredObject.GetComponent<SMBEnemy>().enteredFromRight = true;
+                }else if(discoveredObject.GetComponent<SMBEnemy>().initialX < transform.position.x)
+                {
+                    discoveredObject.GetComponent<SMBEnemy>().enteredFromRight = false;
+                }
+
+
             }
         }else if(discoveredObject.name == "e")
         {
-            if(discoveredObject.GetComponent<SMBBlockBreakable>().isDetected == false)
-            {
-                //Debug.Log("Agent: Breakable Block");
-                discoveredObject.GetComponent<SMBBlockBreakable>().Agent = "BreakableBlock";
-                discoveredObject.GetComponent<SMBBlockBreakable>().isDetected = true;
-            }
+            //if(discoveredObject.GetComponent<SMBBlockBreakable>().isDetected == false)
+            //{
+            //    //Debug.Log("Agent: Breakable Block");
+            //    discoveredObject.GetComponent<SMBBlockBreakable>().Agent = "BreakableBlock";
+            //    discoveredObject.GetComponent<SMBBlockBreakable>().isDetected = true;
+            //}
         }
     }
 
@@ -208,10 +218,25 @@ public class SMBPlayer : SMBCharacter {
     //kill
     private void OnTriggerStay2D(Collider2D collision)
     {
+        if (isAlive == false)
+        {
+            Interaction = "Take Damage";
+            beliefStack.Push(marioBeliefArray);
+            printArray(marioBeliefArray);
+            return;
+        }
+
         GameObject discoveredObject = collision.gameObject;
+
 
         if (discoveredObject.name == "g")
         {
+            //These are so that once an array has already been printed
+            //it won't be printed again
+            //**Add in the exit function one that resets the states
+            //**of the enemy
+            if (discoveredObject.gameObject.GetComponent<SMBEnemy>().printed == true) return;
+
             if (discoveredObject.GetComponent<SMBEnemy>().isDetected == true 
                 && transform.position.y > 0 && discoveredObject.GetComponent<SMBEnemy>().isDead == true)
             {
@@ -219,19 +244,13 @@ public class SMBPlayer : SMBCharacter {
                 discoveredObject.GetComponent<SMBEnemy>().Action = "Jump";
                 discoveredObject.GetComponent<SMBEnemy>().Interaction = "Kill";
                 beliefStack.Push(discoveredObject.GetComponent<SMBEnemy>().beliefArray);
+                discoveredObject.GetComponent<SMBEnemy>().updateBeliefArray();
                 printArray(discoveredObject.GetComponent<SMBEnemy>().beliefArray);
-                //action = "Jump";
-                //interaction = "Kill";
-                //Debug.Log("action is: " + action + " interaction is: " + interaction);
+                discoveredObject.gameObject.GetComponent<SMBEnemy>().printed = true;
             }
         }
 
-        if(isAlive == false)
-        {
-            Interaction = "Take Damage";
-            beliefStack.Push(marioBeliefArray);
-            printArray(marioBeliefArray);
-        }
+
     }
 
     //When Mario's x position is greater than the object, and 
@@ -240,6 +259,9 @@ public class SMBPlayer : SMBCharacter {
     //Mario goes back and fights them?
     private void OnTriggerExit2D(Collider2D collision)
     {
+
+        if (isAlive == false) return;
+
         GameObject discoveredObject = collision.gameObject;
         
         //This if else is for when Mario ignores things
@@ -247,61 +269,92 @@ public class SMBPlayer : SMBCharacter {
         {
             if(discoveredObject.name == "g")
             {
-                discoveredObject.GetComponent<SMBEnemy>().Interaction = "No Effect";
-                discoveredObject.GetComponent<SMBEnemy>().Action = "Walk Right";
-                discoveredObject.GetComponent<SMBEnemy>().isDetected = false;
-                beliefStack.Push(discoveredObject.GetComponent<SMBEnemy>().beliefArray);
-                printArray(discoveredObject.GetComponent<SMBEnemy>().beliefArray);
-                ////might wanna put this on onTriggerExit2D
-                //interaction = "No Effect";
-                //action = "Walk_Right";
-                //Debug.Log("action is: " + action + " interaction is: " + interaction);
+                if (discoveredObject.gameObject.GetComponent<SMBEnemy>().isDead == false)
+                {
+                    if(discoveredObject.gameObject.GetComponent<SMBEnemy>().enteredFromRight == true)
+                    {
+                        discoveredObject.GetComponent<SMBEnemy>().Interaction = "No Effect";
+                        discoveredObject.GetComponent<SMBEnemy>().Action = "Walk Right";
+                        discoveredObject.GetComponent<SMBEnemy>().isDetected = false;
+                        beliefStack.Push(discoveredObject.GetComponent<SMBEnemy>().beliefArray);
+                        Debug.Log("walk right function");
+                        discoveredObject.GetComponent<SMBEnemy>().updateBeliefArray();
+                        printArray(discoveredObject.GetComponent<SMBEnemy>().beliefArray);
+                        discoveredObject.GetComponent<SMBEnemy>().Reset();
+
+                    }
+                }
             }
-            else if(discoveredObject.name == "e")
-            {
-                discoveredObject.GetComponent<SMBBlock>().Interaction = "No Effect";
-                discoveredObject.GetComponent<SMBBlock>().Action = "Walk Right";
-                discoveredObject.GetComponent<SMBBlock>().isDetected = false;
-                beliefStack.Push(discoveredObject.GetComponent<SMBBlock>().beliefArray);
-                printArray(discoveredObject.GetComponent<SMBBlock>().beliefArray);
-            }
+            //else if(discoveredObject.name == "e")
+            //{
+            //    discoveredObject.GetComponent<SMBBlock>().Interaction = "No Effect";
+            //    discoveredObject.GetComponent<SMBBlock>().Action = "Walk Right";
+            //    discoveredObject.GetComponent<SMBBlock>().isDetected = false;
+            //    beliefStack.Push(discoveredObject.GetComponent<SMBBlock>().beliefArray);
+            //    printArray(discoveredObject.GetComponent<SMBBlock>().beliefArray);
+            //}
         }
         else if(discoveredObject.transform.position.x > transform.position.x)
         {
             if(discoveredObject.name == "g")
             {
-                discoveredObject.GetComponent<SMBEnemy>().Interaction = "No Effect";
-                discoveredObject.GetComponent<SMBEnemy>().Action = "Walk Left";
-                discoveredObject.GetComponent<SMBEnemy>().isDetected = false;
-                beliefStack.Push(discoveredObject.GetComponent<SMBEnemy>().beliefArray);
-                printArray(discoveredObject.GetComponent<SMBEnemy>().beliefArray);
+                if (discoveredObject.gameObject.GetComponent<SMBEnemy>().isDead == false)
+                {
+                    if (discoveredObject.gameObject.GetComponent<SMBEnemy>().enteredFromRight == false)
+                    { 
+                        discoveredObject.GetComponent<SMBEnemy>().Interaction = "No Effect";
+                        discoveredObject.GetComponent<SMBEnemy>().Action = "Walk Left";
+                        discoveredObject.GetComponent<SMBEnemy>().isDetected = false;
+                        beliefStack.Push(discoveredObject.GetComponent<SMBEnemy>().beliefArray);
+                        Debug.Log("walk left function");
+                        discoveredObject.GetComponent<SMBEnemy>().updateBeliefArray();
+                        printArray(discoveredObject.GetComponent<SMBEnemy>().beliefArray);
+                        discoveredObject.GetComponent<SMBEnemy>().Reset();
+                    }
+                }
             }
-            else if(discoveredObject.name == "e"){
-                discoveredObject.GetComponent<SMBBlock>().Interaction = "No Effect";
-                discoveredObject.GetComponent<SMBBlock>().Action = "Walk Left";
-                discoveredObject.GetComponent<SMBBlock>().isDetected = false;
-                beliefStack.Push(discoveredObject.GetComponent<SMBBlock>().beliefArray);
-                printArray(discoveredObject.GetComponent<SMBBlock>().beliefArray);
-            }
+            //else if(discoveredObject.name == "e"){
+            //    discoveredObject.GetComponent<SMBBlock>().Interaction = "No Effect";
+            //    discoveredObject.GetComponent<SMBBlock>().Action = "Walk Left";
+            //    discoveredObject.GetComponent<SMBBlock>().isDetected = false;
+            //    beliefStack.Push(discoveredObject.GetComponent<SMBBlock>().beliefArray);
+            //    printArray(discoveredObject.GetComponent<SMBBlock>().beliefArray);
+            //}
             //interaction = "No Effect";
             //action = "Walk_Left";
             //Debug.Log("action is: " + action + " interaction is: " + interaction);
         }
     }
 
+
+
     void printArray(string[] beliefArray)
     {
-        for(int i = 0; i < beliefArray.Length; i++)
+        for (int i = 0; i < beliefArray.Length; i++)
         {
             Debug.Log(beliefArray[i].ToString());
         }
+
+        string path = "Assets/Scripts/Utils/newCoordinates.txt";
+
+        stream = new StreamWriter(path, true);
+
+        stream.WriteLine("Agent: " + beliefArray[0] + " Action: " + beliefArray[1] + " Interaction: " + beliefArray[2]
+            + " Result: " + beliefArray[3]);
+
+       // stream.Close();
+
+        AssetDatabase.ImportAsset(path);
+
+        //TextAsset textAsset = (TextAsset)Resources.Load("newCoordinates");
+
+
     }
 
     void mapPosition(float previousX, float previousY)
     {
-        //Debug.Log("old one is: " + previousX + " new one is:" + transform.position.x);
-        //Debug.Log("(" + transform.position.x + ", " + transform.position.y + ")");
-        writer.WriteLine("("+transform.position.x + ", " + transform.position.y + ")");
+
+        //writer.WriteLine("("+transform.position.x + ", " + transform.position.y + ")");
         
 
       
@@ -446,12 +499,7 @@ public class SMBPlayer : SMBCharacter {
 	void Die(float timeToDie, bool animate = true) {
         isAlive = false;
 
-        //Debug.Log(beliefStack.Count);
-
-        //for(int i = 0; i < beliefStack.Count + 1; i++)
-        //{
-        //    Debug.Log(beliefStack.Pop());
-        //}
+        
 
         Interaction = "Take Damage";
         beliefStack.Push(marioBeliefArray);

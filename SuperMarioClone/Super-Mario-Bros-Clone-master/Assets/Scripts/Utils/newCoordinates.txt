@@ -1,0 +1,8 @@
+Agent: Goomba Action: Walk Right Interaction: No Effect Result: empty
+Agent: Goomba Action: Jump Interaction: Kill Result: empty
+Agent: Goomba Action: Walk Right Interaction: No Effect Result: empty
+Agent: Goomba Action: Walk Right Interaction: No Effect Result: empty
+Agent: Goomba Action: Walk Right Interaction: No Effect Result: empty
+Agent: Goomba Action: Jump Interaction: Kill Result: empty
+Agent: Goomba Action: Jump Interaction: Kill Result: empty
+Agent: Goomba Action: Jump Interaction: Kill Result: empty

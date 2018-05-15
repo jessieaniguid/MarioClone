@@ -12,10 +12,15 @@ public class SMBEnemy : SMBCharacter {
     public bool isDetected = false;
 
     //belief stack variables
-    public string Agent;
-    public string Action;
-    public string Interaction;
-    public string Result;
+    public bool printed;
+    public bool beliefArrayComplete;
+    public string Agent = "empty";
+    public string Action = "empty";
+    public string Interaction = "empty";
+    public string Result = "empty";
+
+    public bool enteredFromRight;
+    public float initialX, finalX;
 
     //tuple
     public string[] beliefArray;
@@ -35,7 +40,16 @@ public class SMBEnemy : SMBCharacter {
 
         //setting up array
         beliefArray = new string[4];
+        beliefArrayComplete = false;
 	}
+
+    public void updateBeliefArray()
+    {
+        beliefArray[0] = Agent;
+        beliefArray[1] = Action;
+        beliefArray[2] = Interaction;
+        beliefArray[3] = Result;
+    }
 
 	// Update is called once per frame
 	override protected void Update () {
@@ -44,6 +58,16 @@ public class SMBEnemy : SMBCharacter {
         beliefArray[1] = Action;
         beliefArray[2] = Interaction;
         beliefArray[3] = Result;
+
+        if(Agent != "empty" && Action != "empty" && Interaction != "empty")
+        {
+    //        Debug.Log(beliefArrayComplete + " and Agent " + Agent
+    //+ " and action " + Action + " and inter " + Interaction);
+            beliefArrayComplete = true;
+
+
+        }
+
 
         if (_state == SMBConstants.EnemyState.Dead)
 			return;
@@ -57,7 +81,17 @@ public class SMBEnemy : SMBCharacter {
 		base.Update ();
 	}
 
-	void Die() {
+    public void Reset()
+    {
+        for(int i = 0; i < beliefArray.Length; i++)
+        {
+            beliefArray[i] = "empty";
+        }
+
+        beliefArrayComplete = false;
+    }
+
+    void Die() {
 
         isDead = true;
 
