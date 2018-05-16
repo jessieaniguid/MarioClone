@@ -7,10 +7,18 @@ public class SMBBlockQuestion : SMBBlock {
 	private GameObject _prizeObject;
 
 	void Start() {
+        rb = gameObject.AddComponent<Rigidbody2D>();
+        rb.isKinematic = true;
+        isDetected = false;
 
+        //setting up array
         beliefArray = new string[4];
+        beliefArray[0] = Agent;
+        beliefArray[1] = Action;
+        beliefArray[2] = Interaction;
+        beliefArray[3] = Result;
 
-		_prizeObject = SMBGameWorld.Instance.InstantiateTile (transform.position, prize);
+        _prizeObject = SMBGameWorld.Instance.InstantiateTile (transform.position, prize);
 
 		if (_prizeObject != null) {
 			_prizeObject.SendMessage ("OnSpawnStart", SendMessageOptions.DontRequireReceiver);
@@ -18,7 +26,7 @@ public class SMBBlockQuestion : SMBBlock {
 		}
 	}
 
-	override protected void DestroyBlock (SMBPlayer player) {
+    override protected void DestroyBlock (SMBPlayer player) {
 
 		_isDestroyed = true;
 		_animator.SetTrigger ("triggerDestroy");

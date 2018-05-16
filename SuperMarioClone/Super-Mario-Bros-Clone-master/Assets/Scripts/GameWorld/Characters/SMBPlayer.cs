@@ -87,10 +87,9 @@ public class SMBPlayer : SMBCharacter {
         circleCollider.radius = circleRadius;
         circleCollider.isTrigger = true;
 
-        //string path = "Assets/Scripts/Utils/newCoordinates.txt";
+        string path = "Assets/Scripts/Utils/newCoordinates.txt";
 
-        //text editing
-        //writer = new StreamWriter(path, false);
+        stream = new StreamWriter(path, true);
 
         //makes it so the player starts out as the tiny mario
         _state = SMBConstants.PlayerState.Short;
@@ -206,7 +205,7 @@ public class SMBPlayer : SMBCharacter {
         {
             if (discoveredObject.GetComponent<SMBBlockBreakable>().isDetected == false)
             {
-                discoveredObject.GetComponent<SMBBlockBreakable>().Agent = "BreakableBlock";
+                discoveredObject.GetComponent<SMBBlockBreakable>().Agent = "Brick";
                 discoveredObject.GetComponent<SMBBlockBreakable>().isDetected = true;
                 discoveredObject.GetComponent<SMBBlockBreakable>().initialX = discoveredObject.transform.position.x;
                 if (discoveredObject.GetComponent<SMBBlockBreakable>().initialX > transform.position.x)
@@ -216,6 +215,56 @@ public class SMBPlayer : SMBCharacter {
                 else if (discoveredObject.GetComponent<SMBBlockBreakable>().initialX < transform.position.x)
                 {
                     discoveredObject.GetComponent<SMBBlockBreakable>().enteredFromRight = false;
+                }
+            }
+        }else if(discoveredObject.name == "7" || discoveredObject.name == "6")
+        {
+            if (discoveredObject.GetComponent<SMBBlockQuestion>().isDetected == false)
+            {
+                discoveredObject.GetComponent<SMBBlockQuestion>().Agent = "QuestionBlock";
+                discoveredObject.GetComponent<SMBBlockQuestion>().isDetected = true;
+                discoveredObject.GetComponent<SMBBlockQuestion>().initialX = discoveredObject.transform.position.x;
+                if (discoveredObject.GetComponent<SMBBlockQuestion>().initialX > transform.position.x)
+                {
+                    discoveredObject.GetComponent<SMBBlockQuestion>().enteredFromRight = true;
+                }
+                else if (discoveredObject.GetComponent<SMBBlockQuestion>().initialX < transform.position.x)
+                {
+                    discoveredObject.GetComponent<SMBBlockQuestion>().enteredFromRight = false;
+                }
+            }
+        }
+        else if (discoveredObject.name == "t")
+        {
+            if (discoveredObject.GetComponent<SMBPipe>().isDetected == false)
+            {
+                discoveredObject.GetComponent<SMBPipe>().Agent = "Pipe";
+                discoveredObject.GetComponent<SMBPipe>().isDetected = true;
+                discoveredObject.GetComponent<SMBPipe>().initialX = discoveredObject.transform.position.x;
+                if (discoveredObject.GetComponent<SMBPipe>().initialX > transform.position.x)
+                {
+                    discoveredObject.GetComponent<SMBPipe>().enteredFromRight = true;
+                }
+                else if (discoveredObject.GetComponent<SMBPipe>().initialX < transform.position.x)
+                {
+                    discoveredObject.GetComponent<SMBPipe>().enteredFromRight = false;
+                }
+            }
+        }
+        else if (discoveredObject.name == "r")
+        {
+            if (discoveredObject.GetComponent<SMBMushroomRed>().isDetected == false)
+            {
+                discoveredObject.GetComponent<SMBMushroomRed>().Agent = "RedMushroom";
+                discoveredObject.GetComponent<SMBMushroomRed>().isDetected = true;
+                discoveredObject.GetComponent<SMBMushroomRed>().initialX = discoveredObject.transform.position.x;
+                if (discoveredObject.GetComponent<SMBMushroomRed>().initialX > transform.position.x)
+                {
+                    discoveredObject.GetComponent<SMBMushroomRed>().enteredFromRight = true;
+                }
+                else if (discoveredObject.GetComponent<SMBMushroomRed>().initialX < transform.position.x)
+                {
+                    discoveredObject.GetComponent<SMBMushroomRed>().enteredFromRight = false;
                 }
             }
         }
@@ -244,7 +293,7 @@ public class SMBPlayer : SMBCharacter {
 
             if (discoveredObject.gameObject.GetComponent<SMBEnemy>().printed == true) return;
 
-            if (discoveredObject.GetComponent<SMBEnemy>().isDetected == true 
+            if (discoveredObject.GetComponent<SMBEnemy>().isDetected == true
                 && transform.position.y > 0 && discoveredObject.GetComponent<SMBEnemy>().isDead == true)
             {
                 discoveredObject.GetComponent<SMBEnemy>().Agent = "Goomba";
@@ -255,20 +304,79 @@ public class SMBPlayer : SMBCharacter {
                 printArray(discoveredObject.GetComponent<SMBEnemy>().beliefArray);
                 discoveredObject.gameObject.GetComponent<SMBEnemy>().printed = true;
             }
-        }else if(discoveredObject.name == "e")
+        } else if (discoveredObject.name == "e")
         {
             if (discoveredObject.gameObject.GetComponent<SMBBlockBreakable>().printed == true) return;
 
+            //isDead is inside the interaction function of block
+            //so when Mario interacts with a block, isDead is turned
+            //to true
             if (discoveredObject.GetComponent<SMBBlockBreakable>().isDetected == true
-                && transform.position.y > 0 && discoveredObject.GetComponent<SMBBlockBreakable>().isDead == true)
+                && transform.position.y > 0 && discoveredObject.GetComponent<SMBBlockBreakable>().isDead == true
+                )
             {
+
+                if (_state == SMBConstants.PlayerState.Short)
+                {
+                    discoveredObject.GetComponent<SMBBlockBreakable>().Interaction = "Hit";
+                }
+                Debug.Log("Destroyed Block");
                 discoveredObject.GetComponent<SMBBlockBreakable>().Agent = "Brick";
                 discoveredObject.GetComponent<SMBBlockBreakable>().Action = "Jump";
-                discoveredObject.GetComponent<SMBBlockBreakable>().Interaction = "Break";
                 beliefStack.Push(discoveredObject.GetComponent<SMBBlockBreakable>().beliefArray);
                 discoveredObject.GetComponent<SMBBlockBreakable>().updateBeliefArray();
                 printArray(discoveredObject.GetComponent<SMBBlockBreakable>().beliefArray);
                 discoveredObject.gameObject.GetComponent<SMBBlockBreakable>().printed = true;
+            }
+        }
+        else if (discoveredObject.name == "7" || discoveredObject.name == "6")
+        {
+            if (discoveredObject.gameObject.GetComponent<SMBBlockQuestion>().printed == true) return;
+
+            //isDead is inside the interaction function of block
+            //so when Mario interacts with a block, isDead is turned
+            //to true
+            if (discoveredObject.GetComponent<SMBBlockQuestion>().isDetected == true
+                && transform.position.y > 0 && discoveredObject.GetComponent<SMBBlockQuestion>().isDead == true
+                )
+            {
+
+                if (_state == SMBConstants.PlayerState.Short)
+                {
+                    discoveredObject.GetComponent<SMBBlockQuestion>().Interaction = "Hit";
+                }
+                Debug.Log("At question interaction");
+                discoveredObject.GetComponent<SMBBlockQuestion>().Agent = "Question Block";
+                discoveredObject.GetComponent<SMBBlockQuestion>().Action = "Jump";
+                beliefStack.Push(discoveredObject.GetComponent<SMBBlockQuestion>().beliefArray);
+                discoveredObject.GetComponent<SMBBlockQuestion>().updateBeliefArray();
+                printArray(discoveredObject.GetComponent<SMBBlockQuestion>().beliefArray);
+                discoveredObject.gameObject.GetComponent<SMBBlockQuestion>().printed = true;
+            }
+        }
+        else if (discoveredObject.name == "r")
+        {
+            if (discoveredObject.gameObject.GetComponent<SMBMushroomRed>().printed == true) return;
+
+            //isDead is inside the interaction function of block
+            //so when Mario interacts with a block, isDead is turned
+            //to true
+            if (discoveredObject.GetComponent<SMBMushroomRed>().isDetected == true
+                && transform.position.y > 0 && discoveredObject.GetComponent<SMBMushroomRed>().isDead == true
+                )
+            {
+
+                if (_state == SMBConstants.PlayerState.Short)
+                {
+                    discoveredObject.GetComponent<SMBBlockQuestion>().Interaction = "GrowUp";
+                }
+                Debug.Log("At question interaction");
+                discoveredObject.GetComponent<SMBBlockQuestion>().Agent = "RedMushroom";
+                discoveredObject.GetComponent<SMBBlockQuestion>().Action = "Eat";
+                beliefStack.Push(discoveredObject.GetComponent<SMBBlockQuestion>().beliefArray);
+                discoveredObject.GetComponent<SMBBlockQuestion>().updateBeliefArray();
+                printArray(discoveredObject.GetComponent<SMBBlockQuestion>().beliefArray);
+                discoveredObject.gameObject.GetComponent<SMBBlockQuestion>().printed = true;
             }
         }
 
@@ -306,7 +414,7 @@ public class SMBPlayer : SMBCharacter {
 
                     }
                 }
-            } else if (discoveredObject.name == "e")
+            }else if (discoveredObject.name == "e")
             {
                 if (discoveredObject.gameObject.GetComponent<SMBBlockBreakable>().isDead == false)
                 {
@@ -320,6 +428,56 @@ public class SMBPlayer : SMBCharacter {
                         discoveredObject.GetComponent<SMBBlockBreakable>().updateBeliefArray();
                         printArray(discoveredObject.GetComponent<SMBBlockBreakable>().beliefArray);
                         discoveredObject.GetComponent<SMBBlockBreakable>().Reset();
+
+                    }
+                }
+            }else if (discoveredObject.name == "7" || discoveredObject.name == "6")
+            {
+                if (discoveredObject.gameObject.GetComponent<SMBBlockQuestion>().isDead == false)
+                {
+                    if (discoveredObject.gameObject.GetComponent<SMBBlockQuestion>().enteredFromRight == true)
+                    {
+                        discoveredObject.GetComponent<SMBBlockQuestion>().Interaction = "No Effect";
+                        discoveredObject.GetComponent<SMBBlockQuestion>().Action = "Walk Right";
+                        discoveredObject.GetComponent<SMBBlockQuestion>().isDetected = false;
+                        beliefStack.Push(discoveredObject.GetComponent<SMBBlockQuestion>().beliefArray);
+                        Debug.Log("Question Block walk right function");
+                        discoveredObject.GetComponent<SMBBlockQuestion>().updateBeliefArray();
+                        printArray(discoveredObject.GetComponent<SMBBlockQuestion>().beliefArray);
+                        discoveredObject.GetComponent<SMBBlockQuestion>().Reset();
+
+                    }
+                }
+            }
+            else if (discoveredObject.name == "t")
+            {
+                if (discoveredObject.gameObject.GetComponent<SMBPipe>().enteredFromRight == true)
+                {
+                    discoveredObject.GetComponent<SMBPipe>().Interaction = "No Effect";
+                    discoveredObject.GetComponent<SMBPipe>().Action = "Walk Right";
+                    discoveredObject.GetComponent<SMBPipe>().isDetected = false;
+                    beliefStack.Push(discoveredObject.GetComponent<SMBPipe>().beliefArray);
+                    Debug.Log("Question Block walk right function");
+                    discoveredObject.GetComponent<SMBPipe>().updateBeliefArray();
+                    printArray(discoveredObject.GetComponent<SMBPipe>().beliefArray);
+                    discoveredObject.GetComponent<SMBPipe>().Reset();
+                }
+                
+            }
+            else if (discoveredObject.name == "r")
+            {
+                if (discoveredObject.gameObject.GetComponent<SMBMushroomRed>().isDead == false)
+                {
+                    if (discoveredObject.gameObject.GetComponent<SMBMushroomRed>().enteredFromRight == true)
+                    {
+                        discoveredObject.GetComponent<SMBMushroomRed>().Interaction = "No Effect";
+                        discoveredObject.GetComponent<SMBMushroomRed>().Action = "Walk Right";
+                        discoveredObject.GetComponent<SMBMushroomRed>().isDetected = false;
+                        beliefStack.Push(discoveredObject.GetComponent<SMBMushroomRed>().beliefArray);
+                        Debug.Log("Mushroom walk right function");
+                        discoveredObject.GetComponent<SMBMushroomRed>().updateBeliefArray();
+                        printArray(discoveredObject.GetComponent<SMBMushroomRed>().beliefArray);
+                        discoveredObject.GetComponent<SMBMushroomRed>().Reset();
 
                     }
                 }
@@ -344,18 +502,70 @@ public class SMBPlayer : SMBCharacter {
                         discoveredObject.GetComponent<SMBEnemy>().Reset();
                     }
                 }
-            } else if (discoveredObject.name == "e")
+            }
+            else if (discoveredObject.name == "e")
             {
-                if (discoveredObject.gameObject.GetComponent<SMBEnemy>().enteredFromRight == false)
+                if (discoveredObject.gameObject.GetComponent<SMBBlockBreakable>().enteredFromRight == false)
                 {
-                    discoveredObject.GetComponent<SMBEnemy>().Interaction = "No Effect";
-                    discoveredObject.GetComponent<SMBEnemy>().Action = "Walk Left";
-                    discoveredObject.GetComponent<SMBEnemy>().isDetected = false;
-                    beliefStack.Push(discoveredObject.GetComponent<SMBEnemy>().beliefArray);
+                    discoveredObject.GetComponent<SMBBlockBreakable>().Interaction = "No Effect";
+                    discoveredObject.GetComponent<SMBBlockBreakable>().Action = "Walk Left";
+                    discoveredObject.GetComponent<SMBBlockBreakable>().isDetected = false;
+                    beliefStack.Push(discoveredObject.GetComponent<SMBBlockBreakable>().beliefArray);
                     Debug.Log("walk left function");
-                    discoveredObject.GetComponent<SMBEnemy>().updateBeliefArray();
-                    printArray(discoveredObject.GetComponent<SMBEnemy>().beliefArray);
-                    discoveredObject.GetComponent<SMBEnemy>().Reset();
+                    discoveredObject.GetComponent<SMBBlockBreakable>().updateBeliefArray();
+                    printArray(discoveredObject.GetComponent<SMBBlockBreakable>().beliefArray);
+                    discoveredObject.GetComponent<SMBBlockBreakable>().Reset();
+                }
+            }
+            else if (discoveredObject.name == "7" || discoveredObject.name == "6")
+            {
+                if (discoveredObject.gameObject.GetComponent<SMBBlockQuestion>().isDead == false)
+                {
+                    if (discoveredObject.gameObject.GetComponent<SMBBlockQuestion>().enteredFromRight == false)
+                    {
+                        discoveredObject.GetComponent<SMBBlockQuestion>().Interaction = "No Effect";
+                        discoveredObject.GetComponent<SMBBlockQuestion>().Action = "Walk Left";
+                        discoveredObject.GetComponent<SMBBlockQuestion>().isDetected = false;
+                        beliefStack.Push(discoveredObject.GetComponent<SMBBlockQuestion>().beliefArray);
+                        Debug.Log("Question Block walk left function");
+                        discoveredObject.GetComponent<SMBBlockQuestion>().updateBeliefArray();
+                        printArray(discoveredObject.GetComponent<SMBBlockQuestion>().beliefArray);
+                        discoveredObject.GetComponent<SMBBlockQuestion>().Reset();
+
+                    }
+                }
+            }
+            else if (discoveredObject.name == "t")
+            {
+                if (discoveredObject.gameObject.GetComponent<SMBPipe>().enteredFromRight == false)
+                {
+                    discoveredObject.GetComponent<SMBPipe>().Interaction = "No Effect";
+                    discoveredObject.GetComponent<SMBPipe>().Action = "Walk Left";
+                    discoveredObject.GetComponent<SMBPipe>().isDetected = false;
+                    beliefStack.Push(discoveredObject.GetComponent<SMBPipe>().beliefArray);
+                    Debug.Log("Pipe walk left function");
+                    discoveredObject.GetComponent<SMBPipe>().updateBeliefArray();
+                    printArray(discoveredObject.GetComponent<SMBPipe>().beliefArray);
+                    discoveredObject.GetComponent<SMBPipe>().Reset();
+
+                }                
+            }
+            else if (discoveredObject.name == "r")
+            {
+                if (discoveredObject.gameObject.GetComponent<SMBMushroomRed>().isDead == false)
+                {
+                    if (discoveredObject.gameObject.GetComponent<SMBMushroomRed>().enteredFromRight == false)
+                    {
+                        discoveredObject.GetComponent<SMBMushroomRed>().Interaction = "No Effect";
+                        discoveredObject.GetComponent<SMBMushroomRed>().Action = "Walk Left";
+                        discoveredObject.GetComponent<SMBMushroomRed>().isDetected = false;
+                        beliefStack.Push(discoveredObject.GetComponent<SMBMushroomRed>().beliefArray);
+                        Debug.Log("Mushroom walk left function");
+                        discoveredObject.GetComponent<SMBMushroomRed>().updateBeliefArray();
+                        printArray(discoveredObject.GetComponent<SMBMushroomRed>().beliefArray);
+                        discoveredObject.GetComponent<SMBMushroomRed>().Reset();
+
+                    }
                 }
             }
         }   
@@ -363,27 +573,25 @@ public class SMBPlayer : SMBCharacter {
 
 
 
-    void printArray(string[] beliefArray)
+    public void printArray(string[] beliefArray)
     {
         for (int i = 0; i < beliefArray.Length; i++)
         {
             Debug.Log(beliefArray[i].ToString());
         }
 
-        string path = "Assets/Scripts/Utils/newCoordinates.txt";
 
-        stream = new StreamWriter(path, true);
 
         stream.WriteLine("Agent: " + beliefArray[0] + " Action: " + beliefArray[1] + " Interaction: " + beliefArray[2]
             + " Result: " + beliefArray[3]);
 
-       stream.Close();
+    }
 
+    private void OnApplicationQuit()
+    {
+        string path = "Assets/Scripts/Utils/newCoordinates.txt";
+        stream.Close();
         AssetDatabase.ImportAsset(path);
-
-        //TextAsset textAsset = (TextAsset)Resources.Load("newCoordinates");
-
-
     }
 
     void mapPosition(float previousX, float previousY)
@@ -764,4 +972,6 @@ public class SMBPlayer : SMBCharacter {
 				Die (0.2f);
 		}
 	}
+
+    
 }

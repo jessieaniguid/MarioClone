@@ -11,7 +11,10 @@ public class SMBBlockBreakable : SMBBlock {
 			SMBGameWorld.Instance.PlaySoundEffect ((int)SMBConstants.GameWorldSoundEffects.BreakBlock);
 
             //for Mario's OnTriggerStay
-            isDead = true;
+            Interaction = "Break";
+            Action = "Jump";
+            updateBeliefArray();
+            player.printArray(beliefArray);
 
 			Destroy (gameObject);
 		}

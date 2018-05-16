@@ -76,6 +76,7 @@ public class SMBBlock : MonoBehaviour {
     }
 
     void Update() {
+        isDead = _isDestroyed;
 
 		if (_bounceState != BounceState.None)
 			Bounce ();
@@ -86,7 +87,7 @@ public class SMBBlock : MonoBehaviour {
 	void OnInteraction(SMBPlayer player) {
 
 		if (_bounceState == BounceState.None && !_isDestroyed) {
-				
+            isDead = true;
 			DestroyBlock (player);
 
 			_posBeforeBounce = transform.position;
