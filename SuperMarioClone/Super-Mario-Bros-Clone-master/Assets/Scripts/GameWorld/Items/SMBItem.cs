@@ -66,9 +66,10 @@ public class SMBItem : MonoBehaviour {
 		
 	virtual protected void OnInteraction() {
 
-        Interaction = "GrowUp";
-        Action = "Eat";
+        //Interaction = "GrowUp";
+        //Action = "Eat";
         updateBeliefArray();
+        Debug.Log("COIN " + Action + " " + Interaction);
         player.printArray(beliefArray);
 
 

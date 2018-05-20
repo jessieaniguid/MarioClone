@@ -4,3 +4,91 @@ Agent: Goomba Action: Jump Interaction: Kill Result: empty
 Agent: Question Block Action: Jump Interaction: Hit Result: empty
 Agent: RedMushroom Action: Walk Left Interaction: No Effect Result: empty
 Agent: RedMushroom Action: Eat Interaction: GrowUp Result: empty
+Agent: Goomba Action: Jump Interaction: Kill Result: empty
+Agent: Question Block Action: Jump Interaction: Hit Result: empty
+Agent: empty Action: Eat Interaction: GrowUp Result: empty
+Agent: Question Block Action: Jump Interaction: Hit Result: empty
+Agent: empty Action: Eat Interaction: GrowUp Result: empty
+Agent: Goomba Action: Walk Right Interaction: No Effect Result: empty
+Agent: Question Block Action: Jump Interaction: Hit Result: empty
+Agent: empty Action: Eat Interaction: GrowUp Result: empty
+Agent: Brick Action: Jump Interaction: Hit Result: empty
+Agent: Goomba Action: Jump Interaction: Kill Result: empty
+Agent: Goomba Action: Jump Interaction: Kill Result: empty
+Agent: Question Block Action: Jump Interaction: Hit Result: empty
+Agent: empty Action: Eat Interaction: GrowUp Result: empty
+Agent: Brick Action: Jump Interaction: Hit Result: empty
+Agent: Question Block Action: Jump Interaction: Hit Result: empty
+Agent: RedMushroom Action: Eat Interaction: GrowUp Result: empty
+Agent: Brick Action: Jump Interaction: Break Result: empty
+Agent: Question Block Action: Jump Interaction: empty Result: empty
+Agent: QuestionBlock Action: Walk Right Interaction: No Effect Result: empty
+Agent: empty Action: Eat Interaction: GrowUp Result: empty
+Agent: Goomba Action: Jump Interaction: Kill Result: empty
+Agent: Question Block Action: Jump Interaction: Hit Result: empty
+Agent: empty Action: Eat Interaction: GrowUp Result: empty
+Agent: Goomba Action: Jump Interaction: Kill Result: empty
+Agent: Question Block Action: Jump Interaction: Hit Result: empty
+Agent: empty Action: Eat Interaction: GrowUp Result: empty
+Agent: Question Block Action: Jump Interaction: Hit Result: empty
+Agent: empty Action: empty Interaction: empty Result: empty
+Agent: Goomba Action: Jump Interaction: Kill Result: empty
+Agent: Question Block Action: Jump Interaction: Hit Result: empty
+Agent: RedMushroom Action: Eat Interaction: GrowUp Result: empty
+Agent: RedMushroom Action: Walk Left Interaction: No Effect Result: empty
+Agent: Goomba Action: Jump Interaction: Kill Result: empty
+Agent: Question Block Action: Jump Interaction: Hit Result: empty
+Agent: empty Action: empty Interaction: empty Result: empty
+Agent: Goomba Action: Jump Interaction: Kill Result: empty
+Agent: Question Block Action: Jump Interaction: Hit Result: empty
+Agent: empty Action: empty Interaction: empty Result: empty
+Agent: Goomba Action: Jump Interaction: Kill Result: empty
+Agent: Question Block Action: Jump Interaction: Hit Result: empty
+Agent: empty Action: empty Interaction: empty Result: empty
+Agent: Question Block Action: Jump Interaction: Hit Result: empty
+Agent: empty Action: Collect Coin Interaction: Hit Question Box Result: empty
+Agent: Goomba Action: Jump Interaction: Kill Result: empty
+Agent: Question Block Action: Jump Interaction: Hit Result: empty
+Agent: RedMushroom Action: Eat Interaction: GrowUp Result: empty
+Agent: RedMushroom Action: Walk Right Interaction: No Effect Result: empty
+Agent: RedMushroom Action: Eat Interaction: GrowUp Result: empty
+Agent: Goomba Action: Jump Interaction: Kill Result: empty
+Agent: Goomba Action: Jump Interaction: Kill Result: empty
+Agent: Question Block Action: Jump Interaction: Hit Result: empty
+Agent: empty Action: Collect Coin Interaction: Hit Question Box Result: empty
+Agent: Question Block Action: Jump Interaction: Hit Result: empty
+Agent: Goomba Action: Jump Interaction: Kill Result: empty
+Agent: Question Block Action: Jump Interaction: Hit Result: empty
+Agent: Goomba Action: Jump Interaction: Kill Result: empty
+Agent: Question Block Action: Jump Interaction: Hit Result: empty
+Agent: RedMushroom Action: Eat Interaction: GrowUp Result: empty
+Agent: Goomba Action: Walk Right Interaction: No Effect Result: empty
+Agent: Question Block Action: Jump Interaction: Hit Result: empty
+Agent: RedMushroom Action: Walk Right Interaction: No Effect Result: empty
+Agent: Goomba Action: Jump Interaction: Kill Result: empty
+Agent: QuestionBlock Action: Walk Right Interaction: No Effect Result: empty
+Agent: Question Block Action: Jump Interaction: Hit Result: empty
+Agent: Goomba Action: Jump Interaction: Kill Result: empty
+Agent: Question Block Action: Jump Interaction: Hit Result: empty
+Agent: RedMushroom Action: Eat Interaction: GrowUp Result: empty
+Agent: Goomba Action: Jump Interaction: Kill Result: empty
+Agent: Question Block Action: Jump Interaction: Hit Result: empty
+Agent: RedMushroom Action: Eat Interaction: GrowUp Result: empty
+Agent: RedMushroom Action: Walk Right Interaction: No Effect Result: empty
+Agent: Goomba Action: Jump Interaction: Kill Result: empty
+Agent: Question Block Action: Jump Interaction: Hit Result: empty
+Agent: RedMushroom Action: Eat Interaction: GrowUp Result: empty
+Agent: RedMushroom Action: Walk Left Interaction: No Effect Result: empty
+Agent: Goomba Action: Jump Interaction: Kill Result: empty
+Agent: Question Block Action: Jump Interaction: Hit Result: empty
+Agent: Goomba Action: Jump Interaction: Kill Result: empty
+Agent: Question Block Action: Jump Interaction: Hit Result: empty
+Agent: Goomba Action: Jump Interaction: Kill Result: empty
+Agent: Question Block Action: Jump Interaction: Hit Result: empty
+Agent: RedMushroom Action: Eat Interaction: GrowUp Result: empty
+Agent: Goomba Action: Jump Interaction: Kill Result: empty
+Agent: Question Block Action: Jump Interaction: Hit Result: empty
+Agent: RedMushroom Action: Eat Interaction: GrowUp Result: empty
+Agent: Goomba Action: Jump Interaction: Kill Result: empty
+Agent: Question Block Action: Jump Interaction: Hit Result: empty
+Agent: RedMushroom Action: Eat Interaction: GrowUp Result: empty

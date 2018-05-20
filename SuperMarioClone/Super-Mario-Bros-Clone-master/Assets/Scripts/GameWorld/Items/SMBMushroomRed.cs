@@ -65,7 +65,10 @@ public class SMBMushroomRed : SMBItem {
 	void OnVerticalCollisionEnter(Collider2D collider) {
 
 		SolveCollision (collider);
-	}
+
+        Interaction = "GrowUp";
+        Action = "Eat";
+    }
 
 	void OnHorizontalCollisionEnter(Collider2D collider) {
 

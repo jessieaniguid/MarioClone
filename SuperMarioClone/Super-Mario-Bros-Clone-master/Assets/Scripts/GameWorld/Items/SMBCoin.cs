@@ -27,9 +27,16 @@ public class SMBCoin : SMBItem {
 
 	override protected void OnInteraction() {
 
-		SMBGameWorld.Instance.PlayParticle (transform.position, "SMBCoinParticleSystem");
-		SMBGameWorld.Instance.PlaySoundEffect ((int)SMBConstants.GameWorldSoundEffects.Coin);
 
-		base.OnInteraction ();
-	}
+
+        SMBGameWorld.Instance.PlayParticle (transform.position, "SMBCoinParticleSystem");
+		SMBGameWorld.Instance.PlaySoundEffect ((int)SMBConstants.GameWorldSoundEffects.Coin);
+        Action = "Collect Coin";
+        Interaction = "Hit Question Box";
+        base.OnInteraction ();
+
+
+        //Debug.Log("COIN " + Action + " " + Interaction);
+
+    }
 }
