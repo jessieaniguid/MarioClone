@@ -1,0 +1,16 @@
+Agent: Goomba Action: Jump Interaction: Kill Result: empty Count: 1
+Agent: Question Block Action: Jump Interaction: Hit Result: empty Count: 1
+Agent: QuestionBlock Action: Walk Right Interaction: No Effect Result: empty Count: 3
+Agent: RedMushroom Action: Eat Interaction: GrowUp Result: empty Count: 1
+Agent: RedMushroom Action: Walk Left Interaction: No Effect Result: empty Count: 1
+Agent: Brick Action: Walk Right Interaction: No Effect Result: empty Count: 3
+Agent: Pipe Action: Walk Right Interaction: No Effect Result: empty Count: 1
+Agent: Mario Action: Take Damage Interaction: Shorten Result: empty Count: 1
+Agent: Goomba Action: Jump Interaction: Kill Result: empty Count: 1
+Agent: Question Block Action: Jump Interaction: Hit Result: empty Count: 1
+Agent: QuestionBlock Action: Walk Right Interaction: No Effect Result: empty Count: 3
+Agent: RedMushroom Action: Eat Interaction: GrowUp Result: empty Count: 1
+Agent: RedMushroom Action: Walk Left Interaction: No Effect Result: empty Count: 1
+Agent: Brick Action: Walk Right Interaction: No Effect Result: empty Count: 3
+Agent: Pipe Action: Walk Right Interaction: No Effect Result: empty Count: 1
+Agent: Mario Action: Take Damage Interaction: Shorten Result: empty Count: 1

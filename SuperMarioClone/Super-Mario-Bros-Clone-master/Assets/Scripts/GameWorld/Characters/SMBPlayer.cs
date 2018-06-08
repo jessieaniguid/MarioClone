@@ -2,6 +2,8 @@
 using System.IO;
 using UnityEditor;
 using UnityEngine;
+using System.Linq;
+
 
 
 [RequireComponent (typeof (SMBParticleSystem))]
@@ -17,6 +19,8 @@ public class SMBPlayer : SMBCharacter {
     //got help from:
     //https://support.unity3d.com/hc/en-us/articles/115000341143-How-do-I-read-and-write-data-from-a-text-file-
     private StreamWriter stream;
+    private StreamReader streamReader;
+    private StreamWriter counterStream;
     private float positionInterval;
 
     //adding circle collider
@@ -33,6 +37,8 @@ public class SMBPlayer : SMBCharacter {
     public string Result;
     public bool isAlive = true;
     public string[] marioBeliefArray;
+    public bool isBlinking;
+    
 
     // Custom components
     private SMBParticleSystem _particleSystem;
@@ -88,8 +94,15 @@ public class SMBPlayer : SMBCharacter {
         circleCollider.isTrigger = true;
 
         string path = "Assets/Scripts/Utils/newCoordinates.txt";
+        string newPath = "Assets/Scripts/Utils/withCounter.txt";
 
         stream = new StreamWriter(path, true);
+        stream.WriteLine("Start Time: " + Time.time);
+
+        //streamReader = new StreamReader(newPath, true);
+
+        counterStream = new StreamWriter(newPath, true);
+        //counterStream.WriteLine("Start Time: " + Time.time);
 
         //makes it so the player starts out as the tiny mario
         _state = SMBConstants.PlayerState.Short;
@@ -379,6 +392,15 @@ public class SMBPlayer : SMBCharacter {
                 discoveredObject.gameObject.GetComponent<SMBBlockQuestion>().printed = true;
             }
         }
+        else if (discoveredObject.name == "4" && transform.position.y > 0)
+        {
+            //string[] stoneBelief = new string[4];
+            //stoneBelief[0] = "Agent: StoneBlock";
+            //stoneBelief[1] = "Action: Jump";
+            //stoneBelief[2] = "Interaction: Hit";
+            //stoneBelief[3] = "Result: empty";
+            //printArray(stoneBelief);
+        }
 
 
     }
@@ -482,6 +504,15 @@ public class SMBPlayer : SMBCharacter {
                     }
                 }
             }
+            else if (discoveredObject.name == "4")
+            {
+                string[] stoneBelief = new string[4];
+                stoneBelief[0] = "Agent: StoneBlock";
+                stoneBelief[1] = "Action: Walk Right";
+                stoneBelief[2] = "Interaction: No Effect";
+                stoneBelief[3] = "Result: empty";
+                printArray(stoneBelief);
+            }
 
         }
         else if (discoveredObject.transform.position.x > transform.position.x)
@@ -568,6 +599,15 @@ public class SMBPlayer : SMBCharacter {
                     }
                 }
             }
+            else if (discoveredObject.name == "4")
+            {
+                string[] stoneBelief = new string[4];
+                stoneBelief[0] = "Agent: StoneBlock";
+                stoneBelief[1] = "Action: Walk Left";
+                stoneBelief[2] = "Interaction: No Effect";
+                stoneBelief[3] = "Result: empty";
+                printArray(stoneBelief);
+            }
         }   
     }
 
@@ -575,32 +615,88 @@ public class SMBPlayer : SMBCharacter {
 
     public void printArray(string[] beliefArray)
     {
+        if (_isInvincible)
+        {
+
+            return;
+        }
+
         for (int i = 0; i < beliefArray.Length; i++)
         {
             Debug.Log(beliefArray[i].ToString());
         }
 
-
-
         stream.WriteLine("Agent: " + beliefArray[0] + " Action: " + beliefArray[1] + " Interaction: " + beliefArray[2]
             + " Result: " + beliefArray[3]);
+    }
+
+    private void outPutBeliefStack()
+    {
+
+
+        string path = "Assets/Scripts/Utils/newCoordinates.txt";
+        string newPath = "Assets/Scripts/Utils/withCounter.txt";
+        //counterStream = new StreamWriter(newPath, true);
+
+        stream.WriteLine("End Time: " + Time.time);
+        stream.WriteLine("----------------------------------------------------------", true);
+
+        stream.Close();
+        stream.Dispose();
+        AssetDatabase.ImportAsset(path);
+
+
+        //makes list of the lines
+        List<string> list = File.ReadAllLines(path).ToList();
+
+        //close reader
+        //streamReader.Close();
+
+        Dictionary<string, int> listWithCounter = new Dictionary<string, int>();
+
+        foreach (string line in list)
+        {
+            if (listWithCounter.ContainsKey(line))
+            {
+                listWithCounter[line]++;
+            }
+            else
+            {
+                listWithCounter.Add(line, 1);
+            }
+        }
+
+
+
+        foreach (KeyValuePair<string, int> kvp in listWithCounter)
+        {
+            if(kvp.Key.Contains("----------------------------------------------------------") ||
+                kvp.Key.Contains("Start") || kvp.Key.Contains("Died") || kvp.Key.Contains("End"))
+            {
+                continue;
+            }
+            counterStream.WriteLine(kvp.Key + " Count: " + kvp.Value);
+            Debug.Log(kvp.Key + " " + kvp.Value);
+        }
+
+        //counterStream.WriteLine("End Time: " + Time.time);
+        //counterStream.WriteLine("----------------------------------------------------------", true);
+
+        counterStream.Close();
+        counterStream.Dispose();
+        AssetDatabase.ImportAsset(newPath);
+
 
     }
 
     private void OnApplicationQuit()
     {
-        string path = "Assets/Scripts/Utils/newCoordinates.txt";
-        stream.Close();
-        AssetDatabase.ImportAsset(path);
+        outPutBeliefStack();
     }
 
     void mapPosition(float previousX, float previousY)
     {
-
         //writer.WriteLine("("+transform.position.x + ", " + transform.position.y + ")");
-        
-
-      
     }
 
     //defines speed. deals with accelleration if player has ran long enough
@@ -742,9 +838,12 @@ public class SMBPlayer : SMBCharacter {
 	void Die(float timeToDie, bool animate = true) {
         isAlive = false;
 
+        stream.WriteLine("-----------------------Died: " + Time.time + " ----------------------", true);
 
-        Interaction = "Take Damage";
-        beliefStack.Push(marioBeliefArray);
+        outPutBeliefStack();
+
+        
+        //beliefStack.Push(marioBeliefArray);
 
 
         if (_isInvincible)
@@ -875,7 +974,9 @@ public class SMBPlayer : SMBCharacter {
 
 		SMBGameWorld.Instance.PauseGame (false);
 
-		_animator.SetTrigger("triggerDamage");
+        stream.WriteLine("Agent: Mario" + " Action: Take Damage" + " Interaction: Shorten"
+            + " Result: empty");
+        _animator.SetTrigger("triggerDamage");
 		_animator.SetLayerWeight (0, 1);
 		_animator.SetLayerWeight (1, 0);
 

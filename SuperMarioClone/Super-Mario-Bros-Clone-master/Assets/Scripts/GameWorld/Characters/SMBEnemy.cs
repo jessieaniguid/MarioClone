@@ -61,8 +61,7 @@ public class SMBEnemy : SMBCharacter {
 
         if(Agent != "empty" && Action != "empty" && Interaction != "empty")
         {
-    //        Debug.Log(beliefArrayComplete + " and Agent " + Agent
-    //+ " and action " + Action + " and inter " + Interaction);
+
             beliefArrayComplete = true;
 
 

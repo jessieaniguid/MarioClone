@@ -1,0 +1,10 @@
+{
+  "version": "0.2.1",
+  "tasks": [
+    {
+      "taskName": "task-withCounter",
+      "appliesTo": "SuperMarioClone/Super-Mario-Bros-Clone-master/Assets/Scripts/Utils/withCounter.txt",
+      "type": "launch"
+    }
+  ]
+}
